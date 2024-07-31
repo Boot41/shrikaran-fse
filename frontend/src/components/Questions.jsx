@@ -1,8 +1,17 @@
-import { Lightbulb } from 'lucide-react';
+import { Lightbulb, Volume2 } from 'lucide-react';
 import React, { useState } from 'react'; // Import useState if used
 
 function Questions({ questions, activeqindex }) {
-  // ... (rest of your code)
+
+  const texttospeech = (text)=>{
+    if("speechSynthesis" in window){
+      const speech = new SpeechSynthesisUtterance(text)
+      window.speechSynthesis.speak(speech)
+    }
+    else{
+      alert("sorry ur browser does not support text to speech")
+    }
+  }
 
   return questions&&(
     <div className='p-5 border rounded-lg my-10'>
@@ -11,7 +20,7 @@ function Questions({ questions, activeqindex }) {
           <h1
             key={index} // Add a unique key for each question
             className={`p-2 rounded-full bg-secondary text-xs md:text-sm text-center cursor-pointer ${
-              activeqindex === index ? 'bg-blue-400 text-white' : ''
+              activeqindex === index ? "bg-red-400 text-white" : ''
             }`}
           >
             Question #{index + 1}
@@ -19,6 +28,7 @@ function Questions({ questions, activeqindex }) {
         ))}
       </div>
         <h2 className='my-5 text-md md:text-lg'>{questions[activeqindex]}</h2>
+        <Volume2 className='cursor-pointer' onClick={()=>texttospeech(questions[activeqindex])}/>
         <div className='border rounded-lg p-5 bg-blue-100 mt-20'>
             <h2 className='flex gap-5 text-blue-800'>
                 <Lightbulb/>

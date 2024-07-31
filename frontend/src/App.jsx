@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
 import Interview from "./components/Interview";
 import Startinterview from "./components/Startinterview";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -98,6 +99,7 @@ function App() {
               <Route path="/interview/:id/start" element={<Startinterview/>}/>
             </Routes>
           </div>
+          <Toaster/>
         </SignedIn>
       </div>
     </Router>

@@ -6,6 +6,7 @@ import Recordanswersection from "./Recordanswersection";
 function Startinterview() {
   const { id } = useParams();
   const [questions, setquestions] = useState([]);
+  const [answers,setanswers] = useState([]);
   const [activeqindex,setactiveqindex] = useState(0);
 
   useEffect(() => {
@@ -21,6 +22,7 @@ function Startinterview() {
         try {
           data = JSON.parse(data);
           setquestions(data.map(item => item.question));
+          setanswers(data.map(item => item.answer))
         } catch (error) {
           console.error("Error parsing JSON:", error);
         }
@@ -40,7 +42,7 @@ function Startinterview() {
             {/* questions */}
             <Questions questions={questions} activeqindex={activeqindex}/>
             {/* video/audio recording */}
-            <Recordanswersection/>
+            <Recordanswersection questions={questions} answers={answers} activeqindex={activeqindex} id={id} />
         </div>
     </div>
   );

@@ -51,8 +51,7 @@ function Addnewviva() {
 
       // Optional: Check if the response has an "answer" key
       if (data.answer) {
-        // Remove leading and trailing markdown code blocks if necessary
-        data.answer = data.answer.replace("```json","").replace("```","");
+        // Remove leading and trailing markdown code blocks if necessar;
         console.log("Response from backend:", JSON.parse(data.answer) , "wheter inserted" , data.success);
         navigate("/interview/"+data.vivaid)
       } else {
