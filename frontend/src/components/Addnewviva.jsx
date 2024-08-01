@@ -66,7 +66,7 @@ function Addnewviva() {
   };
 
   return (
-    <div>
+    <div className="mt-5 mb-5">
       <div
         onClick={() => setopendialog(true)}
         className="p-10 border rounded-lg max-w-md bg-secondary hover:scale-105 hover:shadow-md cursor-pointer transition-all"

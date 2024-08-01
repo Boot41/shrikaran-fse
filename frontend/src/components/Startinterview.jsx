@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Questions from "./Questions";
 import Recordanswersection from "./Recordanswersection";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 function Startinterview() {
   const { id } = useParams();
@@ -50,8 +51,10 @@ function Startinterview() {
           onClick={()=>setactiveqindex(activeqindex-1)} className="bg-blue-400">Previous question</Button>}
           {activeqindex!=questions.length-1&&<Button
           onClick={()=>setactiveqindex(activeqindex+1)} className="bg-blue-400">next question</Button>}
-          {activeqindex==questions.length-1&&<Button
-          className="bg-blue-400">End Interview</Button>}
+          <Link to={"/interview/"+id+"/feedback"}>
+            {activeqindex==questions.length-1&&<Button
+            className="bg-blue-400">End Interview</Button>}
+          </Link>
         </div>
     </div>
   );

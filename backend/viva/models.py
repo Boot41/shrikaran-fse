@@ -12,6 +12,18 @@ class MockViva(models.Model):
     class Meta:
         app_label = 'viva'
 
+    def to_dict(self):
+        return {
+            'vivaid': self.vivaid,
+            'jsonvivaresponse': self.jsonvivaresponse,
+            'Specialization': self.Specialization,
+            'SpecializationDescription': self.SpecializationDescription,
+            'difficulty': self.difficulty,
+            'created_by': self.created_by,
+            'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),  # Format date/time
+            # Include other fields as needed
+        }
+
 class QuestionData(models.Model):
     vivaid = models.CharField(max_length=100)
     question = models.TextField()

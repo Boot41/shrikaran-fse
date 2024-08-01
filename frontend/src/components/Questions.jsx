@@ -20,7 +20,7 @@ function Questions({ questions, activeqindex }) {
           <h1
             key={index} // Add a unique key for each question
             className={`p-2 rounded-full bg-secondary text-xs md:text-sm text-center cursor-pointer ${
-              activeqindex === index ? "bg-red-400 text-white" : ''
+              activeqindex === index ? "bg-orange-200" : ''
             }`}
           >
             Question #{index + 1}
