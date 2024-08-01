@@ -2,6 +2,7 @@ import React, { useState, useEffect, useTransition } from "react";
 import { useParams } from "react-router-dom";
 import Questions from "./Questions";
 import Recordanswersection from "./Recordanswersection";
+import { Button } from "./ui/button";
 
 function Startinterview() {
   const { id } = useParams();
@@ -43,6 +44,14 @@ function Startinterview() {
             <Questions questions={questions} activeqindex={activeqindex}/>
             {/* video/audio recording */}
             <Recordanswersection questions={questions} answers={answers} activeqindex={activeqindex} id={id} />
+        </div>
+        <div className="flex justify-end gap-6">
+          {activeqindex>0 && <Button
+          onClick={()=>setactiveqindex(activeqindex-1)} className="bg-blue-400">Previous question</Button>}
+          {activeqindex!=questions.length-1&&<Button
+          onClick={()=>setactiveqindex(activeqindex+1)} className="bg-blue-400">next question</Button>}
+          {activeqindex==questions.length-1&&<Button
+          className="bg-blue-400">End Interview</Button>}
         </div>
     </div>
   );

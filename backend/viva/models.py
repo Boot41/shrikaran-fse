@@ -11,3 +11,17 @@ class MockViva(models.Model):
 
     class Meta:
         app_label = 'viva'
+
+class QuestionData(models.Model):
+    vivaid = models.CharField(max_length=100)
+    question = models.TextField()
+    answer = models.TextField()
+    useranswer = models.TextField(blank=True, null=True)
+    feedback = models.TextField(blank=True, null=True)
+    rating = models.IntegerField(null=True)
+    useremail = models.CharField(null=True)
+    # Additional fields as needed (e.g., created_at, updated_at, user_id)
+
+    def __str__(self):
+        return self.question[:50]  # Truncate question for display
+

@@ -10,7 +10,8 @@ import { useUser } from "@clerk/clerk-react";
 
 function Recordanswersection({ questions, answers, activeqindex, id }) {
   const [useranswer, setuseranswer] = useState("");
-  const {user} = useUser();
+  const[loading,setloading] = useState(false)
+  const { user } = useUser();
   const {
     error,
     interimResult,
@@ -31,8 +32,10 @@ function Recordanswersection({ questions, answers, activeqindex, id }) {
 
   const saveuseranswer = async () => {
     if (isRecording) {
+      setloading(true)
       stopSpeechToText();
-      if (useranswer <= 0) {
+      if (useranswer.length <= 0) {
+        setloading(false)
         toast("error while recording the answer pls try again");
         return;
       }
@@ -41,12 +44,12 @@ function Recordanswersection({ questions, answers, activeqindex, id }) {
         questions[activeqindex] +
         ", user answer " +
         useranswer +
-        " based an the useranswer for the question give a rating and a feed back for the answer in just 3 to 5 lines in json format with rating field and feed back field do give any other data just give the rating and feed back beasue i want to parse it into json format so i dot need any extra data so pls only give the json";
+        " based an the useranswer for the question give a rating and a feed back for the answer in just 3 to 5 lines in json format with rating field and the rating should be out of 5 and feed back field do give any other data just give the rating and feed back beasue i want to parse it into json format so i dot need any extra data so pls only give the json and agian i say i only need the json no extra data";
 
       let result = await getGroqChatCompletion(feedbackprompt);
       result = result.choices[0].message.content;
       let jsonresponse = JSON.parse(result);
-      console.log(result);
+      console.log(jsonresponse)
 
       try {
         const response = await fetch(
@@ -57,12 +60,12 @@ function Recordanswersection({ questions, answers, activeqindex, id }) {
               "Content-Type": "application/x-www-form-urlencoded",
             },
             body: new URLSearchParams({
-              viva_id : id,
+              viva_id: id,
               question: questions[activeqindex],
-              answer : answers[activeqindex],
+              answer: answers[activeqindex],
               useranswer,
-              feeback : jsonresponse?.feeback,
-              rating : jsonresponse?.rating,
+              feedback: jsonresponse?.feedback,
+              rating: jsonresponse?.rating,
               useremail: user?.primaryEmailAddress.emailAddress,
             }),
           }
@@ -73,12 +76,15 @@ function Recordanswersection({ questions, answers, activeqindex, id }) {
         }
 
         let res = await response.json();
-        console.log(res.answer)
-      } 
-      catch (error) {
+        console.log(res);
+      } catch (error) {
         console.error("Error submitting data:", error);
-        // Handle error, e.g., show error message to the user
+        toast.error(
+          "An error occurred while saving feedback. Please try again later."
+        );
       }
+      setuseranswer("");
+      setloading(false)
     } else {
       startSpeechToText();
     }
@@ -103,7 +109,6 @@ function Recordanswersection({ questions, answers, activeqindex, id }) {
           "Record answer"
         )}
       </Button>
-      <Button onClick={() => console.log(useranswer)}>show answer</Button>
     </div>
   );
 }

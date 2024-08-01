@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os, pdb
 import uuid
 import google.generativeai as genai
-from .models import MockViva
+from .models import MockViva,QuestionData
 from django.forms.models import model_to_dict
 
 
@@ -122,7 +122,39 @@ def get_mockviva_data(request, viva_id):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-@csrf_exempt  
+# @csrf_exempt  
+# def store_feedback(request):
+#     if request.method == 'POST':
+#         data = request.POST
+#         vivaid = data.get("viva_id")
+#         question = data.get("question")
+#         answer = data.get("answer")
+#         useranswer = data.get("useranswer")
+#         feeback = data.get("feeback")
+#         rating = data.get("rating")
+#         useremail = data.get("useremail")
+
+#         try:
+#             question_data = QuestionData(
+#                 vivaid=vivaid,
+#                 question=question,
+#                 answer=answer,
+#                 useranswer=useranswer,
+#                 feeback=feeback,
+#                 rating=rating,
+#                 useremail=useremail
+#             )
+#             question_data.save()
+
+#             print("this is the response",vivaid,question,answer,useranswer,feeback,rating,useremail)
+#             return JsonResponse({'success': True}, status=201)
+        
+#         except:
+#             return JsonResponse({"error" : "an error occured"},status=500)
+#     else:
+#         return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@csrf_exempt
 def store_feedback(request):
     if request.method == 'POST':
         data = request.POST
@@ -130,45 +162,39 @@ def store_feedback(request):
         question = data.get("question")
         answer = data.get("answer")
         useranswer = data.get("useranswer")
-        feeback = data.get("feeback")
+        feedback = data.get("feeback")
         rating = data.get("rating")
         useremail = data.get("useremail")
 
         try:
-            print("this is the response",vivaid,question,answer,useranswer,feeback,rating,useremail)
-            return JsonResponse({"answer" : "printed succes fully"})
-        except:
-            return JsonResponse({"answer" : "not printed correctly"})
+            question_data = QuestionData(
+                vivaid=vivaid,
+                question=question,
+                answer=answer,
+                useranswer=useranswer,
+                feedback=feedback,
+                rating=rating,
+                useremail=useremail
+            )
+            print("this is the response",vivaid,question,answer,useranswer,feedback,rating,useremail)
+            question_data.full_clean()  # Validate data before saving
+            question_data.save()
+            return JsonResponse({'success': True}, status=201)
+        except (ValueError, TypeError, KeyError) as e:
+            return JsonResponse({'error': f'Invalid data: {str(e)}'}, status=400)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({'error': 'An error occurred'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 def check():
     all_objs = MockViva.objects.all()
     for data in all_objs:
         print(data.vivaid)
 
-# genai.configure(api_key="AIzaSyCTPvOSwbjuDi18VKWbYkkCSd_0A--Ckec")
-# # genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-
-# # Create the model
-# generation_config = {
-#   "temperature": 1,
-#   "top_p": 0.95,
-#   "top_k": 64,
-#   "max_output_tokens": 8192,
-#   "response_mime_type": "text/plain",
-# }
-
-# model = genai.GenerativeModel(
-#   model_name="gemini-1.5-flash",
-#   generation_config=generation_config,
-#   # safety_settings = Adjust safety settings
-#   # See https://ai.google.dev/gemini-api/docs/safety-settings
-# )
-
-# chat_session = model.start_chat(
-
-# )
-
-# response = chat_session.send_message("INSERT_INPUT_HERE")
 
 
 
