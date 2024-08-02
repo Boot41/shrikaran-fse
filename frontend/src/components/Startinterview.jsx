@@ -2,10 +2,13 @@ import React, { useState, useEffect, useTransition } from "react";
 import { useParams } from "react-router-dom";
 import Questions from "./Questions";
 import Recordanswersection from "./Recordanswersection";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 function Startinterview() {
   const { id } = useParams();
   const [questions, setquestions] = useState([]);
+  const [answers,setanswers] = useState([]);
   const [activeqindex,setactiveqindex] = useState(0);
 
   useEffect(() => {
@@ -21,6 +24,7 @@ function Startinterview() {
         try {
           data = JSON.parse(data);
           setquestions(data.map(item => item.question));
+          setanswers(data.map(item => item.answer))
         } catch (error) {
           console.error("Error parsing JSON:", error);
         }
@@ -40,7 +44,17 @@ function Startinterview() {
             {/* questions */}
             <Questions questions={questions} activeqindex={activeqindex}/>
             {/* video/audio recording */}
-            <Recordanswersection/>
+            <Recordanswersection questions={questions} answers={answers} activeqindex={activeqindex} id={id} />
+        </div>
+        <div className="flex justify-end gap-6">
+          {activeqindex>0 && <Button
+          onClick={()=>setactiveqindex(activeqindex-1)} className="bg-blue-400">Previous question</Button>}
+          {activeqindex!=questions.length-1&&<Button
+          onClick={()=>setactiveqindex(activeqindex+1)} className="bg-blue-400">next question</Button>}
+          <Link to={"/interview/"+id+"/feedback"}>
+            {activeqindex==questions.length-1&&<Button
+            className="bg-blue-400">End Interview</Button>}
+          </Link>
         </div>
     </div>
   );

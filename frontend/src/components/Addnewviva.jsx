@@ -43,16 +43,15 @@ function Addnewviva() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      // if (!response.ok) {
+      //   throw new Error("Network response was not ok");
+      // }
 
       let data = await response.json(); // Parse the JSON response
 
       // Optional: Check if the response has an "answer" key
       if (data.answer) {
-        // Remove leading and trailing markdown code blocks if necessary
-        data.answer = data.answer.replace("```json","").replace("```","");
+        // Remove leading and trailing markdown code blocks if necessar;
         console.log("Response from backend:", JSON.parse(data.answer) , "wheter inserted" , data.success);
         navigate("/interview/"+data.vivaid)
       } else {
@@ -67,7 +66,7 @@ function Addnewviva() {
   };
 
   return (
-    <div>
+    <div className="mt-5 mb-5">
       <div
         onClick={() => setopendialog(true)}
         className="p-10 border rounded-lg max-w-md bg-secondary hover:scale-105 hover:shadow-md cursor-pointer transition-all"

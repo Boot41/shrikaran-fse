@@ -6,11 +6,15 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/clerk-react";
-import { BrowserRouter as Router, Route,Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
 import Interview from "./components/Interview";
 import Startinterview from "./components/Startinterview";
+import { Toaster } from "sonner";
+import Feedback from "./components/Feedback";
+import Terminationpage from "./components/Terminationpage";
+import Recordanswersection from "./components/Recordanswersection";
 
 function App() {
   return (
@@ -90,14 +94,17 @@ function App() {
           </section>
         </SignedOut>
         <SignedIn>
-          <Header/>
+          <Header />
           <div className="mx-5 md:mx-20 lg:mx-36">
             <Routes>
-              <Route path="/" element={<Dashboard/>}/>
-              <Route path="/interview/:id" element={<Interview/>} />
-              <Route path="/interview/:id/start" element={<Startinterview/>}/>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/interview/:id" element={<Interview />} />
+              <Route path="/interview/:id/start" element={<Startinterview />} />
+              <Route path="/interview/:id/feedback" element={<Feedback />} />
+              <Route path="/terminated" element={<Terminationpage />} />
             </Routes>
           </div>
+          <Toaster />
         </SignedIn>
       </div>
     </Router>

@@ -139,3 +139,16 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# settings.py
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'shrikaranksmycoding@gmail.com'
+EMAIL_HOST_PASSWORD = 'crta nawz qwru dgpm'  # Use environment variables for security
+
+# Additional settings (like DEBUG, INSTALLED_APPS, etc.) should be here
+
