@@ -9,7 +9,7 @@ from .models import MockViva,QuestionData
 from django.forms.models import model_to_dict
 
 client = Groq(
-    api_key="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",
+    api_key="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",
 )
 
 @csrf_exempt
@@ -150,6 +150,39 @@ def get_interview_list(request):
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
     
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def send_email(request):
+    if request.method == 'POST':
+        try:
+            # pdb.set_trace()
+            data = request.POST
+            recipient_email = data.get('to')
+            subject = data.get('subject')
+            message = data.get('message')
+
+           
+
+            send_mail(
+                subject,
+                message,
+                'shrikaranksmycoding@gmail.com',  # From email
+                [recipient_email],
+                fail_silently=False,
+            )
+            return JsonResponse({"message": "Email sent successfully"}, status=200)
+        except Exception as e:
+            logger.error(f"Error sending email: {e}", exc_info=True)
+            return JsonResponse({"message": str(e)}, status=500)
+    return JsonResponse({"message": "Invalid request method"}, status=400)
+
 
 def check():
     all_objs = MockViva.objects.all()
