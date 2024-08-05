@@ -1,7 +1,8 @@
-import Groq from "groq-sdk";
+// Example for React
+import Groq from 'groq-sdk';
 
 const groq = new Groq({
-    apiKey: "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",
+    apiKey: import.meta.env.REACT_APP_API_KEY || "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",
     dangerouslyAllowBrowser: true
 });
 
