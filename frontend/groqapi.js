@@ -1,7 +1,7 @@
 import Groq from "groq-sdk";
 
 const groq = new Groq({
-    apiKey: "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",
+    apiKey: "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",
     dangerouslyAllowBrowser: true
 });
 

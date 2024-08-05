@@ -2,14 +2,12 @@ from groq import Groq
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import os, pdb
+import os
 import uuid
-import google.generativeai as genai
-from .models import MockViva,QuestionData
-from django.forms.models import model_to_dict
+from .models import MockViva
 
 client = Groq(
-    api_key="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",
+    api_key="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",
 )
 
 @csrf_exempt
@@ -24,7 +22,6 @@ def handle_viva_data(request):
         inputprompt = f"Specialization: {specialization}, subject: {description}, difficulty: {difficulty}, medium based on this information give 5 viva question and answeres in json format give question and answer in field as json dont give any other data no addtional data like Here are 5 viva questions and answers related to the anatomy of the body, with a difficulty level of easy to medium just the json data beacuse i have to parse it into json i dont need any additional data just the json ur giving even the aditinal data which is making my application not run dont give addtional data just the json response so that i can parse it ur give this 'Here are the 5 viva questions and answers in JSON format:' dont even give this i just plain json data"
 
         try:
-            # pdb.set_trace()
             chat_completion = client.chat.completions.create(
                 messages=[
                     {
@@ -37,11 +34,7 @@ def handle_viva_data(request):
             result = chat_completion.choices[0].message.content
             viva_response = result
 
-            # Clean the viva response by removing "```json" and "```"
-            # cleaned_viva_response = viva_response.replace("```json", "").replace("```").strip()
-
             # Generate unique vivaid
-            print(result)
             vivaid = str(uuid.uuid4())
 
             # Create MockViva instance with data
@@ -50,21 +43,24 @@ def handle_viva_data(request):
                 Specialization=specialization,
                 SpecializationDescription=description,
                 difficulty=difficulty,
-                created_by=useremail,  # Replace with actual user name (optional)
+                created_by=useremail,
                 vivaid=vivaid,
             )
 
             # Save the data to the database
+            print(viva_response)  # Debugging purpose
             mock_viva.save()
 
             # Return success response with vivaid and answer
             return JsonResponse({'success': True, 'vivaid': vivaid, 'answer': viva_response}, status=201)
 
         except Exception as e:
-            # Handle the exception without logging
-            return JsonResponse({'error': 'An error occurred calling Gemini'}, status=500)
+            # Log the error message for debugging
+            print(f"Error occurred: {e}")
+            return JsonResponse({'error': 'An error occurred calling groq'}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
     
 @csrf_exempt

@@ -12,5 +12,17 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['tracking']
-  }
+  },
+  build: {
+    outDir: "dist",
+    assetsDir: "static",
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: "static/main.js",
+        chunkFileNames: "static/[name].js",
+        assetFileNames: "static/[name].[ext]",
+      },
+    },
+  },
 })

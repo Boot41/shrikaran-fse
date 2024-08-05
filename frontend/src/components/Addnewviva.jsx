@@ -43,11 +43,9 @@ function Addnewviva() {
         }
       );
 
-      // if (!response.ok) {
-      //   throw new Error("Network response was not ok");
-      // }
-
       let data = await response.json(); // Parse the JSON response
+
+      console.log(data);
 
       // Optional: Check if the response has an "answer" key
       if (data.answer) {
