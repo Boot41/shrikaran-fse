@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import uuid
 from .models import MockViva
+import pdb
 
 client = Groq(
     api_key="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",
@@ -49,6 +50,7 @@ def handle_viva_data(request):
 
             # Save the data to the database
             print(viva_response)  # Debugging purpose
+            
             mock_viva.save()
 
             # Return success response with vivaid and answer

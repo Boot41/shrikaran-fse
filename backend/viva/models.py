@@ -31,7 +31,7 @@ class QuestionData(models.Model):
     useranswer = models.TextField(blank=True, null=True)
     feedback = models.TextField(blank=True, null=True)
     rating = models.IntegerField(null=True)
-    useremail = models.CharField(null=True)
+    useremail = models.CharField(max_length=255,null=True)
     # Additional fields as needed (e.g., created_at, updated_at, user_id)
 
     def __str__(self):
