@@ -168,8 +168,6 @@ def send_email(request):
             subject = data.get('subject')
             message = data.get('message')
 
-           
-
             send_mail(
                 subject,
                 message,
@@ -183,11 +181,36 @@ def send_email(request):
             return JsonResponse({"message": str(e)}, status=500)
     return JsonResponse({"message": "Invalid request method"}, status=400)
 
+@csrf_exempt
+def genrate_Feedback(request):
+    if request.method == "POST":
+        data = request.POST
+        inputprompt = data.get("prompt")
+        try:
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "user",
+                        "content": inputprompt,
+                    }
+                ],
+                model="llama3-8b-8192",
+            )
+            result = chat_completion.choices[0].message.content
+            feedbackresponse = result
+            print(feedbackresponse)
+            return JsonResponse({"feedback" : feedbackresponse}, status=201)
+            
+        
+        except Exception as e:
+            # Log the error message for debugging
+            print(f"Error occurred: {e}")
+            return JsonResponse({'error': 'An error occurred calling groq'}, status=500)
+    
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-def check():
-    all_objs = MockViva.objects.all()
-    for data in all_objs:
-        print(data.vivaid)
+
 
 
 
