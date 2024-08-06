@@ -1,11 +1,13 @@
+from django.forms.models import model_to_dict
 from groq import Groq
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 import uuid
-from .models import MockViva
+from .models import MockViva, QuestionData
 import pdb
+
 
 client = Groq(
     api_key="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",
