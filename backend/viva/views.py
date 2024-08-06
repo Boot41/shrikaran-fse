@@ -1,17 +1,11 @@
 from django.forms.models import model_to_dict
-from groq import Groq
-import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import os
 import uuid
 from .models import MockViva, QuestionData
-import pdb
-
-
-client = Groq(
-    api_key="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",
-)
+from django.http import JsonResponse
+import logging
+from .services import groq_chat,sendemail,genratevivadata
 
 @csrf_exempt
 def handle_viva_data(request):
@@ -22,20 +16,9 @@ def handle_viva_data(request):
         difficulty = data.get('difficulty')
         useremail = data.get("useremail")
 
-        inputprompt = f"Specialization: {specialization}, subject: {description}, difficulty: {difficulty}, medium based on this information give 5 viva question and answeres in json format give question and answer in field as json dont give any other data no addtional data like Here are 5 viva questions and answers related to the anatomy of the body, with a difficulty level of easy to medium just the json data beacuse i have to parse it into json i dont need any additional data just the json ur giving even the aditinal data which is making my application not run dont give addtional data just the json response so that i can parse it ur give this 'Here are the 5 viva questions and answers in JSON format:' dont even give this i just plain json data"
-
         try:
-            chat_completion = client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": inputprompt,
-                    }
-                ],
-                model="llama3-8b-8192",
-            )
-            result = chat_completion.choices[0].message.content
-            viva_response = result
+
+            viva_response = genratevivadata(specialization,description,difficulty)
 
             # Generate unique vivaid
             vivaid = str(uuid.uuid4())
@@ -49,9 +32,6 @@ def handle_viva_data(request):
                 created_by=useremail,
                 vivaid=vivaid,
             )
-
-            # Save the data to the database
-            print(viva_response)  # Debugging purpose
             
             mock_viva.save()
 
@@ -60,7 +40,7 @@ def handle_viva_data(request):
 
         except Exception as e:
             # Log the error message for debugging
-            print(f"Error occurred: {e}")
+            logger.error(f"Error occurred: {e}")
             return JsonResponse({'error': 'An error occurred calling groq'}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
@@ -74,7 +54,6 @@ def get_mockviva_data(request, viva_id):
             mock_viva = MockViva.objects.get(pk=viva_id)
             # Serialize the entire model instance to JSON
             data = model_to_dict(mock_viva)
-            print(data)
             return JsonResponse(data, status=200)
         except MockViva.DoesNotExist:
             return JsonResponse({'error': 'MockViva with given ID not found'}, status=404)
@@ -103,7 +82,6 @@ def store_feedback(request):
                 rating=rating,
                 useremail=useremail
             )
-            print("this is the response",vivaid,question,answer,useranswer,feedback,rating,useremail)
             question_data.full_clean()  # Validate data before saving
             question_data.save()
             return JsonResponse({'success': True}, status=201)
@@ -120,14 +98,10 @@ def store_feedback(request):
 def get_feedback(request, vivaid):
     try:
         question_data = QuestionData.objects.filter(vivaid=vivaid).order_by('id').values()
-        print(list(question_data))
+
         return JsonResponse(list(question_data), safe=False)
     except QuestionData.DoesNotExist:
         return JsonResponse({'error': 'No feedback found for this viva id'}, status=404)
-
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt  # Only use for specific, idempotent views
 
 @csrf_exempt
 def get_interview_list(request):
@@ -139,8 +113,6 @@ def get_interview_list(request):
             interviews = MockViva.objects.filter(created_by=useremail)
             interview_data = [interview.to_dict() for interview in interviews]
 
-            print(interview_data)
-
             return JsonResponse({"success": True, "data": interview_data}, status=200)  # Use 200 for successful data retrieval
 
         except Exception as e:
@@ -150,31 +122,19 @@ def get_interview_list(request):
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
     
-from django.core.mail import send_mail
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-import logging
-
 logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def send_email(request):
     if request.method == 'POST':
         try:
-            # pdb.set_trace()
             data = request.POST
             recipient_email = data.get('to')
             subject = data.get('subject')
             message = data.get('message')
 
-            send_mail(
-                subject,
-                message,
-                'shrikaranksmycoding@gmail.com',  # From email
-                [recipient_email],
-                fail_silently=False,
-            )
+            sendemail(recipient_email,subject,message)
+
             return JsonResponse({"message": "Email sent successfully"}, status=200)
         except Exception as e:
             logger.error(f"Error sending email: {e}", exc_info=True)
@@ -187,24 +147,12 @@ def genrate_Feedback(request):
         data = request.POST
         inputprompt = data.get("prompt")
         try:
-            chat_completion = client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": inputprompt,
-                    }
-                ],
-                model="llama3-8b-8192",
-            )
-            result = chat_completion.choices[0].message.content
-            feedbackresponse = result
-            print(feedbackresponse)
+            feedbackresponse = groq_chat(inputprompt)
             return JsonResponse({"feedback" : feedbackresponse}, status=201)
             
-        
         except Exception as e:
             # Log the error message for debugging
-            print(f"Error occurred: {e}")
+            logger.error(f"Error occurred: {e}")
             return JsonResponse({'error': 'An error occurred calling groq'}, status=500)
     
     else:
