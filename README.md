@@ -12,7 +12,7 @@
             <li><strong>Visually Appealing UI:</strong> Engaging and user-friendly interface.</li>
         </ul>
 
-        <h2>Prerequisites</h2>
+<h2>Prerequisites</h2>
         <ul>
             <li>Python 3.8+</li>
             <li>Node.js 14+</li>
@@ -20,9 +20,9 @@
             <li>Docker (optional)</li>
         </ul>
 
-        <h2>Getting Started</h2>
+<h2>Getting Started</h2>
 
-        <h3>Backend Setup</h3>
+<h3>Backend Setup</h3>
         <ol>
             <li>Navigate to the backend directory:
                 <pre><code>cd backend</code></pre>
@@ -43,7 +43,7 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`</code></pre>
             </li>
         </ol>
 
-        <h3>Frontend Setup</h3>
+<h3>Frontend Setup</h3>
         <ol>
             <li>Navigate to the frontend directory:
                 <pre><code>cd frontend</code></pre>
@@ -56,7 +56,7 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`</code></pre>
             </li>
         </ol>
 
-        <h2>Environment Variables</h2>
+ <h2>Environment Variables</h2>
         <p>Create a <code>.env</code> file in the backend directory with the following variables:</p>
         <pre><code>DEBUG=True
 SECRET_KEY=your_secret_key
@@ -68,16 +68,16 @@ POSTGRES_PORT=5432
 EMAIL_USER=your_email@example.com
 EMAIL_PASS=your_email_password</code></pre>
 
-        <h2>Docker Setup for AI-Powered Viva Platform</h2>
+<h2>Docker Setup for AI-Powered Viva Platform</h2>
         <p>This section provides information on how to use Docker to build and run the AI-Powered Viva Platform.</p>
 
-        <h3>Prerequisites</h3>
+<h3>Prerequisites</h3>
         <ul>
             <li>Docker</li>
             <li>Docker Compose (optional, but recommended)</li>
         </ul>
 
-        <h3>Dockerfile Overview</h3>
+ <h3>Dockerfile Overview</h3>
         <p>Our Dockerfile uses a multi-stage build process:</p>
         <ul>
             <li>Builds the React frontend.</li>
@@ -85,14 +85,14 @@ EMAIL_PASS=your_email_password</code></pre>
             <li>Copies the built static files from the frontend to the backend.</li>
         </ul>
 
-        <h3>Building the Docker Image</h3>
+<h3>Building the Docker Image</h3>
         <pre><code>docker build -t ai-powered-viva-platform .</code></pre>
 
-        <h3>Running the Container</h3>
+<h3>Running the Container</h3>
         <pre><code>docker run -p 8000:8000 ai-powered-viva-platform</code></pre>
         <p>This will start the server and make it accessible on <code>http://localhost:8000</code>.</p>
 
-        <h3>Environment Variables</h3>
+ <h3>Environment Variables</h3>
         <p>The Dockerfile sets up the following environment variables:</p>
         <pre><code>POSTGRES_DB=viva
 POSTGRES_USER=postgres
@@ -101,11 +101,11 @@ POSTGRES_HOST=localhost
 POSTGRES_PORT=5432</code></pre>
         <p>Ensure these match your PostgreSQL setup. For production, it's recommended to use Docker secrets or environment files instead of hardcoding these values.</p>
 
-        <h3>Volumes</h3>
+<h3>Volumes</h3>
         <p>If you need to persist data or make live changes, consider setting up volumes. This can be done when running the container:</p>
         <pre><code>docker run -v /path/on/host:/code -p 8000:8000 ai-powered-viva-platform</code></pre>
 
-        <h3>Docker Compose (Optional)</h3>
+<h3>Docker Compose (Optional)</h3>
         <p>For easier management, especially when dealing with multiple services (e.g., Django and PostgreSQL), consider using Docker Compose. Create a <code>docker-compose.yml</code> file in your project root:</p>
         <pre><code>version: '3.8'
 services:
