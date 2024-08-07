@@ -1,10 +1,13 @@
 [run]
 source = .
 omit = 
-    */migrations/*
+    */migrations/*coverage run -m pytest
+
     */tests/*
     */admin.py
     */apps.py
     */wsgi.py
     */settings.py
     */__init__.py
+    backend/asgi.py
+    backend/wsgi.py
